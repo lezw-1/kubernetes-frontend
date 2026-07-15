@@ -1,0 +1,284 @@
+/* Global styles — ChronSorting design system */
+
+/* ── Base reset ─────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  color: #252525;
+  background: transparent;
+}
+
+/* ── Shell layout ────────────────────────────────────────── */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ── Sidebar navigation ──────────────────────────────────── */
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 180px;
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+  background: #051f3f;
+  box-shadow: 2px 0 12px rgba(5, 31, 63, 0.25);
+  flex-shrink: 0;
+}
+
+/* Spacer to push logout to the bottom */
+.app-nav__spacer {
+  flex: 1;
+}
+
+.app-nav__btn {
+  width: 100%;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+  text-decoration: none;
+}
+
+.app-nav__btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.app-nav__btn:disabled {
+  background: rgba(5, 31, 63, 0.25);
+  border-color: #051f3f;
+  cursor: default;
+}
+
+.app-nav__btn--active {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.app-nav--collapsed {
+  width: 44px;
+  padding: 1.5rem 6px;
+  align-items: center;
+}
+
+.app-nav__toggle {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.app-nav__toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Login ──────────────────────────────────────────────── */
+
+.app-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.app-login__form {
+  background: #fff;
+  padding: 2.75rem;
+  border-radius: 12px;
+  border: 1px solid #ebeced;
+  box-shadow: 0 8px 32px rgba(5, 31, 63, 0.10);
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.app-login__title {
+
+  color: #051f3f;
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin: 0 0 0.25rem 0;
+}
+
+/* Text/password inputs */
+.app-input {
+  padding: 0.65rem 0.75rem;
+  border-radius: 6px;
+  border: 1.5px solid #ebeced;
+  font-size: 0.875rem;
+
+  color: #252525;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: #f8f9f9;
+}
+
+.app-input:focus {
+  border-color: #051f3f;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(5, 31, 63, 0.10);
+}
+
+/* ── Shared link ────────────────────────────────────────── */
+
+.app-link {
+  color: #051f3f;
+  text-decoration: none;
+}
+
+.app-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Page wrapper ───────────────────────────────────────── */
+
+.app-page {
+
+  color: #252525;
+  width: 80%;
+  margin: 0 auto;
+  padding: 1.75rem 0;
+}
+
+/* Page subtitle */
+.app-subtitle {
+  color: #555a62;
+  font-size: 0.9rem;
+  margin: -1rem 0 1.5rem 0;
+}
+
+/* Page title */
+.app-title {
+
+  color: #051f3f;
+  font-size: 1.75rem;
+  font-weight: normal;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid #051f3f;
+}
+
+/* ── Buttons ────────────────────────────────────────────── */
+
+.app-btn {
+  background: #051f3f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 0.8rem;
+
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.app-btn:hover:not(:disabled) {
+  background: #072851;
+  box-shadow: 0 2px 8px rgba(5, 31, 63, 0.25);
+}
+
+.app-btn:disabled {
+  background: #c3c5c8;
+  cursor: not-allowed;
+}
+
+.app-btn--lg {
+  padding: 11px 28px;
+  font-size: 0.95rem;
+}
+
+/* ── Feedback ───────────────────────────────────────────── */
+
+.app-error {
+  color: #b42318;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Empty state / loading text */
+.app-placeholder {
+  padding: 0.6rem 0.75rem;
+  color: #555a62;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* ── Table ──────────────────────────────────────────────── */
+
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.app-table th {
+  background: #f3f4f5;
+  color: #051f3f;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  text-align: left;
+  border-bottom: 2px solid #051f3f;
+}
+
+.app-table__sortable-th {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.app-table__sortable-th:hover {
+  background: #ebeced;
+}
+
+.app-table__sort-icon {
+  color: #555a62;
+  font-size: 0.75rem;
+}
+
+.app-table td {
+  padding: 5px 10px;
+  vertical-align: top;
+  border-bottom: 1px solid #ebeced;
+}
+
+.app-table tbody tr:hover {
+  background: #f8f9f9;
+}

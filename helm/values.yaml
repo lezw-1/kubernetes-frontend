@@ -1,0 +1,22 @@
+# Global: Cross-cutting environment settings
+global:
+  environment: dev # "dev" on the dev branch, "prod" on the prod branch
+
+# Gateway: HTTPRoute configuration
+gateway:
+  hosts:
+    domain: "" # Domain injected by CI on each deploy
+
+# Frontend: React SPA deployment settings
+frontend:
+  image:
+    repository: <CF_ORG_ID>.<CF_CR_REGION>.registry.cloudfleet.dev/frontend # CI updates tag below
+    tag: dev # CI overwrites with commit SHA on each push
+    pullPolicy: Always
+  service:
+    port: 80 # nginx port
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilization: 70
