@@ -1,7 +1,7 @@
-# Frontend — CI/CD Pipeline
+# Frontend — CI Pipeline
 #
 # Triggers:
-#   - Push to dev/prod: build + push image, update image tag in helm/values.yaml
+#   - Push to dev/prod: build + push image, then update image tag in kubernetes-deployment
 #
 # Required secrets:
 #   - CF_ORG_ID:              Cloudfleet organization ID
@@ -9,9 +9,9 @@
 #   - CF_ACCESS_TOKEN_SECRET: Cloudfleet token secret
 #   - CF_CR_REGION:           Cloudfleet container registry region
 #   - AUTH_IAM_SUBPATH:       IAM subpath (e.g. /iam)
-#   - HOST_NAME:              Domain name of host
+#   - DEPLOY_REPO_TOKEN:      GitHub PAT with write access to kubernetes-deployment repo
 
-name: Build and Deploy Frontend
+name: Build and Push Frontend
 
 on:
   push:
@@ -52,12 +52,16 @@ jobs:
           cache-to: type=gha,scope=frontend,mode=max
           cache-from: type=gha,scope=frontend
 
-  update-helm-values:
+  update-deployment-repo:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout kubernetes-deployment
         uses: actions/checkout@v4
+        with:
+          repository: lezw-1/kubernetes-deployment
+          ref: ${{ github.ref_name }}
+          token: ${{ secrets.DEPLOY_REPO_TOKEN }}
 
       - name: Install yq
         run: |
@@ -65,17 +69,17 @@ jobs:
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
 
-      - name: Update image tag in helm/values.yaml
+      - name: Update image tag in helm/envs
         run: |
           # Pin the deployed image to the exact commit SHA
-          yq e '.frontend.image.tag = "${{ github.sha }}"' -i helm/values.yaml
-          yq e '.frontend.image.repository = "${{ env.REGISTRY }}/frontend"' -i helm/values.yaml
-          yq e '.gateway.hosts.domain = "${{ secrets.HOST_NAME }}"' -i helm/values.yaml
+          ENV_FILE="helm/envs/${{ github.ref_name }}.yaml"
+          yq e '.frontend.values.image.tag = "${{ github.sha }}"' -i "$ENV_FILE"
+          yq e '.frontend.values.image.repository = "${{ env.REGISTRY }}/frontend"' -i "$ENV_FILE"
 
-      - name: Commit and push updated values
+      - name: Commit and push updated tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add helm/values.yaml
-          git commit -m "chore: update image tag to ${{ github.sha }} [skip ci]"
+          git add helm/envs/${{ github.ref_name }}.yaml
+          git commit -m "chore: update frontend image tag to ${{ github.sha }}"
           git push

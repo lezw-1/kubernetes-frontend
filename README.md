@@ -20,7 +20,7 @@ npm run dev
 ### Build image locally
 
 ```bash
-docker build -t frontend:local \
+nerdctl build -t frontend:local \
   --build-arg VITE_IAM_SUBPATH=/iam \
   -f Containerfile .
 ```
