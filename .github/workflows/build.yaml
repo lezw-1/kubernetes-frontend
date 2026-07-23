@@ -14,7 +14,7 @@ name: Build and Push Frontend
 
 on:
   push:
-    branches: [dev, prod]
+    branches: [dev, staging, prod]
 
 env:
   REGISTRY: ${{ secrets.CF_ORG_ID }}.${{ secrets.CF_CR_REGION }}.registry.cloudfleet.dev
