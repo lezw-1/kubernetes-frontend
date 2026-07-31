@@ -1,0 +1,291 @@
+/* Active Jobs and Create New Job shown side by side instead of stacked */
+.promises-jobs-row {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+.promises-jobs-row .promises-panel {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+.promises-jobs-row .promises-panel__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pin the bottom action row (submit button / pagination + delete all) to the panel's bottom edge */
+.promises-jobs-row .promises-panel__submit,
+.promises-jobs-row .promises-jobs-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+/* Tab bar switching between the Search and Jobs panel groups */
+.promises-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #ebeced;
+  margin-bottom: 1.5rem;
+}
+
+.promises-tab {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #555a62;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.promises-tab:hover {
+  color: #051f3f;
+}
+
+.promises-tab--active {
+  color: #051f3f;
+  border-bottom-color: #051f3f;
+}
+
+/* Dot shown on the Jobs tab while a search_job is active */
+.promises-tab__badge {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b42318;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* Bordered card shell shared by every section (Search, Results, Active Jobs, Create New Job) */
+.promises-panel {
+  border: 1px solid #ebeced;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+/* Header row with a divider, separating a panel's title from its body */
+.promises-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.5rem;
+  padding: 0.75rem 1.1rem;
+  background: #f3f4f5;
+  border-bottom: 2px solid #051f3f;
+  box-sizing: border-box;
+}
+
+.promises-panel__title {
+  color: #051f3f;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Small square icon button that expands/collapses a panel's body */
+.promises-panel__toggle {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.promises-panel__body {
+  padding: 1.1rem;
+}
+
+/* Centered submit button row at the bottom of a panel's form */
+.promises-panel__submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* Spacing between stacked labeled fields within a panel body */
+.promises-field-group {
+  margin-bottom: 1rem;
+}
+.promises-field-group:last-child {
+  margin-bottom: 0;
+}
+
+/* Small uppercase label above a field or field group */
+.promises-field-label {
+  display: block;
+  color: #555a62;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem 0;
+}
+
+/* Row of year-bound filter inputs */
+.promises-filter-row {
+  display: flex;
+  gap: 12px;
+}
+
+/* Text input for the politician name */
+.promises-politician-input {
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Narrow number input for a single year bound */
+.promises-year-input {
+  width: 100px;
+}
+
+/* Read-only job type value shown in Create New Job */
+.promises-job-type {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #252525;
+}
+
+/* Row of labeled config inputs (politician, max results) in Create New Job */
+.promises-config-row {
+  display: flex;
+  gap: 16px;
+}
+.promises-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: #555a62;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.promises-config-field .app-input {
+  font-size: 0.875rem;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #252525;
+}
+
+/* Fixed layout so column widths below are honored instead of sized to content */
+.promises-table {
+  table-layout: fixed;
+}
+
+/* Column widths: keep every column narrow except excerpt, which needs the room */
+.promises-col-date {
+  width: 8%;
+}
+.promises-col-politician {
+  width: 12%;
+}
+.promises-col-promise {
+  width: 20%;
+}
+.promises-col-source {
+  width: 15%;
+}
+.promises-col-excerpt {
+  width: 45%;
+}
+
+/* Date/politician/promise/source cells wrap onto multiple lines instead of overflowing */
+.promises-cell-wrap {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Excerpt cell wraps onto multiple lines so the full text is visible */
+.promises-excerpt-cell {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Single-row footer holding the page-size selector, pagination, and Delete all button */
+.promises-jobs-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Page-size selector in the Active Jobs panel footer */
+.promises-page-size {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555a62;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.promises-page-size .app-input {
+  padding: 0.3rem 0.5rem;
+  width: auto;
+}
+
+/* Prev/next controls in the Active Jobs footer, centered in the remaining space */
+.promises-pagination {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Card holding one in-flight job's status, inside the Active Jobs panel body */
+.promises-job-card {
+  border: 1px solid #ebeced;
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  background: #f8f9f9;
+}
+.promises-job-card + .promises-job-card {
+  margin-top: 0.75rem;
+}
+
+.promises-job-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.promises-job-card__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #252525;
+}
+
+/* Type/Status meta lines */
+.promises-job-card__meta {
+  color: #555a62;
+  font-size: 0.8rem;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Current job status, phrased as a step */
+.promises-job-card__step {
+  color: #555a62;
+  font-size: 0.8rem;
+  margin: 0.5rem 0 0.5rem 0;
+}
+
+.promises-job-card__progress {
+  margin: 0 0 0.5rem 0;
+}
+
+/* Relative "started X ago" label */
+.promises-job-card__elapsed {
+  color: #555a62;
+  font-size: 0.75rem;
+  margin: 0 0 0.7rem 0;
+}

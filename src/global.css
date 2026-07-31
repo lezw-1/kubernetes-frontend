@@ -282,3 +282,26 @@ body {
 .app-table tbody tr:hover {
   background: #f8f9f9;
 }
+
+/* ── Progress bar (indeterminate) ───────────────────────── */
+
+.app-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: #ebeced;
+  overflow: hidden;
+  margin: 0 0 0.75rem 0;
+}
+
+.app-progress__bar {
+  height: 100%;
+  width: 30%;
+  background: #051f3f;
+  border-radius: 2px;
+  animation: app-progress-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes app-progress-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(333%); }
+}
