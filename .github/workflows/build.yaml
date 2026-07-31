@@ -9,6 +9,8 @@
 #   - CF_ACCESS_TOKEN_SECRET: Cloudfleet token secret -> create token via UI and use 'Access Token Secret'
 #   - CF_CR_REGION:           Cloudfleet container registry region -> get via UI 'https://console.cloudfleet.ai/registry'
 #   - AUTH_IAM_SUBPATH:       IAM subpath (e.g. /iam)
+#   - GITOPS_DISPATCH_TOKEN:  Fine-grained PAT scoped to lezw-1/kubernetes-gitops, Contents: Read and
+#                             write -> notifies that repo's image-tag-bump workflow on staging/prod pushes
 
 name: Build and Push Frontend
 
@@ -50,3 +52,28 @@ jobs:
             VITE_IAM_SUBPATH=${{ secrets.AUTH_IAM_SUBPATH }}
           cache-to: type=gha,scope=frontend,mode=max
           cache-from: type=gha,scope=frontend
+
+  notify-gitops:
+    # Staging/prod only — dev deploys a locally built image and never
+    # consumes anything pushed to the registry (see kubernetes-gitops
+    # argocd/clusters/dev/values/frontend.yaml).
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'staging' || github.ref_name == 'prod'
+    steps:
+      - name: Dispatch image-published event to kubernetes-gitops
+        # Triggers kubernetes-gitops's image-tag-bump workflow, which bumps
+        # image.tag in the matching argocd/clusters/<env>/values/frontend.enc.yaml
+        # via sops and pushes — Argo CD's existing syncPolicy.automated then
+        # picks up the change on its own.
+        env:
+          GITOPS_DISPATCH_TOKEN: ${{ secrets.GITOPS_DISPATCH_TOKEN }}
+          ENV_NAME: ${{ github.ref_name }}
+          SHA: ${{ github.sha }}
+        run: |
+          curl -sSf -X POST \
+            -H "Authorization: Bearer $GITOPS_DISPATCH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/lezw-1/kubernetes-gitops/dispatches \
+            -d "$(jq -n --arg env "$ENV_NAME" --arg sha "$SHA" \
+                '{event_type:"image-published", client_payload:{app:"frontend", env:$env, sha:$sha}}')"
