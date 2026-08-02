@@ -9,8 +9,9 @@
 #   - CF_ACCESS_TOKEN_SECRET: Cloudfleet token secret -> create token via UI and use 'Access Token Secret'
 #   - CF_CR_REGION:           Cloudfleet container registry region -> get via UI 'https://console.cloudfleet.ai/registry'
 #   - AUTH_IAM_SUBPATH:       IAM subpath (e.g. /iam)
-#   - GITOPS_DISPATCH_TOKEN:  Fine-grained PAT scoped to lezw-1/kubernetes-gitops, Contents: Read and
-#                             write -> notifies that repo's image-tag-bump workflow on staging/prod pushes
+#   - GITOPS_DISPATCH_TOKEN:  Fine-grained PAT scoped to lezw-1/kubernetes-gitops, Actions: Read and
+#                             write -> dispatches that repo's image-tag-bump workflow (via workflow_dispatch,
+#                             with ref set to the target env branch) on staging/prod pushes
 
 name: Build and Push Frontend
 
@@ -61,11 +62,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_name == 'staging' || github.ref_name == 'prod'
     steps:
-      - name: Dispatch image-published event to kubernetes-gitops
-        # Triggers kubernetes-gitops's image-tag-bump workflow, which bumps
-        # image.tag in the matching argocd/clusters/<env>/values/frontend.enc.yaml
-        # via sops and pushes — Argo CD's existing syncPolicy.automated then
-        # picks up the change on its own.
+      - name: Dispatch image-tag-bump workflow in kubernetes-gitops
+        # Runs kubernetes-gitops's image-tag-bump workflow via workflow_dispatch
+        # (not repository_dispatch — that always resolves against the repo's
+        # default branch, which would silently run the wrong env's copy of the
+        # workflow). ref:$env makes GitHub load and run the copy of the workflow
+        # that lives on the target env branch. It bumps image.tag in the
+        # matching argocd/clusters/<env>/values/frontend.enc.yaml via sops and
+        # pushes — Argo CD's existing syncPolicy.automated then picks up the
+        # change on its own.
         env:
           GITOPS_DISPATCH_TOKEN: ${{ secrets.GITOPS_DISPATCH_TOKEN }}
           ENV_NAME: ${{ github.ref_name }}
@@ -74,6 +79,6 @@ jobs:
           curl -sSf -X POST \
             -H "Authorization: Bearer $GITOPS_DISPATCH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/lezw-1/kubernetes-gitops/dispatches \
+            https://api.github.com/repos/lezw-1/kubernetes-gitops/actions/workflows/image-tag-bump.yaml/dispatches \
             -d "$(jq -n --arg env "$ENV_NAME" --arg sha "$SHA" \
-                '{event_type:"image-published", client_payload:{app:"frontend", env:$env, sha:$sha}}')"
+                '{ref:$env, inputs:{app:"frontend", env:$env, sha:$sha}}')"
